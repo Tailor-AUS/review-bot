@@ -167,7 +167,7 @@ resource botService 'Microsoft.BotService/botServices@2023-09-15-preview' = {
     description: 'Automatically captures meeting outcomes and embeds them in documents'
     endpoint: 'https://${functionApp.properties.defaultHostName}/api/messages'
     msaAppId: botAppId
-    msaAppType: 'MultiTenant'
+    msaAppType: 'SingleTenant'
     msaAppTenantId: tenantId
     luisAppIds: []
     schemaTransformationVersion: '1.3'
