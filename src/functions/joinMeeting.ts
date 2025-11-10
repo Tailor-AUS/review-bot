@@ -47,10 +47,11 @@ export async function joinMeeting(
       body: 'Invalid request',
     };
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     context.error('Error in joinMeeting:', error);
     return {
       status: 500,
-      body: `Error: ${error.message}`,
+      body: `Error: ${errorMessage}`,
     };
   }
 }
@@ -108,7 +109,8 @@ async function processPostMeeting(eventId: string, context: InvocationContext) {
         };
       }
     } catch (transcriptError) {
-      context.warn('Could not fetch transcript:', transcriptError.message);
+      const errorMessage = transcriptError instanceof Error ? transcriptError.message : 'Unknown error';
+      context.warn('Could not fetch transcript:', errorMessage);
     }
 
     // Fallback: Return meeting metadata without transcript
