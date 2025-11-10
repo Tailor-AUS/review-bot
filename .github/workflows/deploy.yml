@@ -1,57 +1,77 @@
-name: Auto-Deploy Code (Fast)
-
-# This workflow automatically deploys code changes on push
-# For full infrastructure + code deployment, use "Deploy Teams Agent (Full Stack)" workflow
+name: Deploy Bot Code
 
 on:
   push:
     branches:
       - master
       - main
-    paths:
-      - 'src/**'
-      - 'package.json'
-      - 'tsconfig.json'
-      - 'host.json'
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
 
 env:
-  AZURE_FUNCTIONAPP_NAME: review-bot-dev-func
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'
   NODE_VERSION: '18.x'
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    environment: production
+    environment: ${{ github.event.inputs.environment || 'dev' }}
     
     steps:
-    - name: 'Checkout GitHub Action'
+    - name: 'Checkout code'
       uses: actions/checkout@v4
 
-    - name: Setup Node ${{ env.NODE_VERSION }} Environment
+    - name: 'Determine environment'
+      id: env
+      run: |
+        if [ "${{ github.event.inputs.environment }}" != "" ]; then
+          ENV="${{ github.event.inputs.environment }}"
+        else
+          ENV="dev"
+        fi
+        echo "environment=$ENV" >> $GITHUB_OUTPUT
+        echo "functionAppName=review-bot-$ENV-func" >> $GITHUB_OUTPUT
+        echo "📍 Deploying to: $ENV"
+
+    - name: 'Setup Node.js'
       uses: actions/setup-node@v4
       with:
         node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
 
     - name: 'Install dependencies'
-      shell: bash
       run: |
-        npm install
-        npm run build --if-present
+        npm ci
+
+    - name: 'Build TypeScript'
+      run: |
+        npm run build
 
     - name: 'Login to Azure'
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: 'Run Azure Functions Action'
+    - name: 'Deploy to Azure Functions'
       uses: Azure/functions-action@v1
       with:
-        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        app-name: ${{ steps.env.outputs.functionAppName }}
+        package: '.'
+
+    - name: 'Deployment info'
+      run: |
+        echo "✅ Deployed to: ${{ steps.env.outputs.functionAppName }}"
+        echo "🔗 Function URL: https://${{ steps.env.outputs.functionAppName }}.azurewebsites.net"
         
     - name: 'Logout from Azure'
-      run: |
-        az logout
+      if: always()
+      run: az logout
 
