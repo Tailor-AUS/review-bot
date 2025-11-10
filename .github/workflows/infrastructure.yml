@@ -1,0 +1,70 @@
+name: Deploy Infrastructure
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+jobs:
+  deploy-infrastructure:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    
+    steps:
+    - name: 'Checkout code'
+      uses: actions/checkout@v4
+
+    - name: 'Login to Azure'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 'Create Resource Group'
+      run: |
+        az group create \
+          --name rg-review-bot \
+          --location australiaeast
+
+    - name: 'Deploy Bicep Template'
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        resourceGroupName: rg-review-bot
+        template: ./infra/main.bicep
+        parameters: >
+          environmentName=${{ github.event.inputs.environment }}
+          location=australiaeast
+          botAppId=${{ secrets.BOT_APP_ID }}
+          botAppSecret=${{ secrets.BOT_APP_SECRET }}
+          reviewUserId=${{ secrets.REVIEW_USER_ID }}
+          reviewUpn=${{ secrets.REVIEW_UPN }}
+          tenantId=${{ secrets.AZURE_TENANT_ID }}
+        failOnStdErr: false
+
+    - name: 'Get Deployment Outputs'
+      id: deployment
+      run: |
+        OUTPUTS=$(az deployment group show \
+          --resource-group rg-review-bot \
+          --name ${{ github.run_id }} \
+          --query properties.outputs \
+          --output json)
+        echo "outputs=$OUTPUTS" >> $GITHUB_OUTPUT
+
+    - name: 'Display Outputs'
+      run: |
+        echo "Deployment completed successfully!"
+        echo "${{ steps.deployment.outputs.outputs }}"
+
+    - name: 'Logout from Azure'
+      run: |
+        az logout
+
