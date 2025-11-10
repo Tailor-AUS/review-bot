@@ -2,10 +2,11 @@
 
 ## Active Subscription
 
-**Subscription ID:** `c46e8bc4-6cd3-46e3-a4a2-13a7533ecc5b`  
-**Created:** 2025-11-10  
+**Subscription ID:** `892eb986-8546-4ed7-a8cf-9a4ca8c74025`  
+**Created:** 2025-11-10 16:41 AEDT  
 **Expires:** 2025-11-17T00:00:00Z  
 **Status:** ✅ Active  
+**Previous ID:** `c46e8bc4-6cd3-46e3-a4a2-13a7533ecc5b` (deleted and recreated)  
 
 ### Configuration
 
