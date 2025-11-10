@@ -1,0 +1,54 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/teams/v1.16/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.16",
+  "version": "1.0.0",
+  "id": "{{APP_ID}}",
+  "packageName": "au.tailorco.reviewbot",
+  "developer": {
+    "name": "Tailor Co",
+    "websiteUrl": "https://tailorco.au",
+    "privacyUrl": "https://tailorco.au/privacy",
+    "termsOfUseUrl": "https://tailorco.au/terms"
+  },
+  "icons": {
+    "color": "color.png",
+    "outline": "outline.png"
+  },
+  "name": {
+    "short": "Review Bot",
+    "full": "Document Review Bot for Teams"
+  },
+  "description": {
+    "short": "Automatically captures meeting outcomes and embeds them in documents",
+    "full": "Review Bot activates when review@tailorco.au is CC'd on a meeting. It captures decisions, tasks, and action items, then embeds them directly into your project documents."
+  },
+  "accentColor": "#FFFFFF",
+  "bots": [
+    {
+      "botId": "{{BOT_ID}}",
+      "scopes": [
+        "personal",
+        "team",
+        "groupchat"
+      ],
+      "supportsFiles": false,
+      "isNotificationOnly": false,
+      "supportsCalling": false,
+      "supportsVideo": false
+    }
+  ],
+  "permissions": [
+    "identity",
+    "messageTeamMembers"
+  ],
+  "validDomains": [
+    "*.tailorco.au",
+    "*.microsoft.com",
+    "*.microsoftonline.com"
+  ],
+  "webApplicationInfo": {
+    "id": "{{BOT_ID}}",
+    "resource": "api://botid-{{BOT_ID}}"
+  }
+}
+

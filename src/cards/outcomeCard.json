@@ -1,0 +1,80 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "✅ Meeting Outcomes Captured",
+      "weight": "Bolder",
+      "size": "Large",
+      "color": "Good"
+    },
+    {
+      "type": "TextBlock",
+      "text": "${meetingSubject}",
+      "weight": "Bolder",
+      "size": "Medium",
+      "spacing": "Medium"
+    },
+    {
+      "type": "TextBlock",
+      "text": "**Decisions Made:**",
+      "weight": "Bolder",
+      "spacing": "Medium"
+    },
+    {
+      "type": "TextBlock",
+      "text": "${decisions}",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "**Action Items:**",
+      "weight": "Bolder",
+      "spacing": "Medium"
+    },
+    {
+      "type": "TextBlock",
+      "text": "${actionItems}",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "**Tasks Created:**",
+      "weight": "Bolder",
+      "spacing": "Medium"
+    },
+    {
+      "type": "TextBlock",
+      "text": "${tasks}",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "**Summary:**",
+      "weight": "Bolder",
+      "spacing": "Medium"
+    },
+    {
+      "type": "TextBlock",
+      "text": "${summary}",
+      "wrap": true
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.OpenUrl",
+      "title": "View Document",
+      "url": "${documentUrl}",
+      "style": "positive"
+    },
+    {
+      "type": "Action.OpenUrl",
+      "title": "View in Planner",
+      "url": "${plannerUrl}",
+      "style": "default"
+    }
+  ]
+}
+
