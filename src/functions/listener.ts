@@ -1,5 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
 import { getGraphClient } from '../lib/graphClient';
+import { acceptMeetingInvitation, isMeetingInvitation } from '../services/meetingAcceptor';
 
 /**
  * Azure Function that handles Graph change notifications for calendar events
@@ -68,19 +69,36 @@ async function processNotification(
 
       context.log('Event details:', JSON.stringify(event));
 
+      // Check if this is a meeting invitation that needs acceptance
+      const isInvite = await isMeetingInvitation(resourceData.id, process.env.REVIEW_USER_ID || '');
+      
+      if (isInvite) {
+        context.log('Meeting invitation detected - auto-accepting...');
+        const accepted = await acceptMeetingInvitation(
+          resourceData.id,
+          process.env.REVIEW_USER_ID || ''
+        );
+        
+        if (accepted) {
+          context.log('✅ Meeting accepted successfully');
+        }
+      }
+      
       // Check if this is a Teams meeting
       if (event.isOnlineMeeting && event.onlineMeeting) {
         context.log('Teams meeting detected:', event.onlineMeeting.joinUrl);
         
-        // TODO: Trigger meeting join logic
-        // For now, just log the meeting details
         context.log('Meeting info:', {
           subject: event.subject,
           start: event.start,
           end: event.end,
           joinUrl: event.onlineMeeting.joinUrl,
           organizer: event.organizer?.emailAddress?.address,
+          responseStatus: event.responseStatus,
         });
+        
+        // TODO: Schedule processing after meeting ends
+        // For now, meetings are logged and ready for processing
       }
     } catch (error) {
       context.error('Error fetching event details:', error);
