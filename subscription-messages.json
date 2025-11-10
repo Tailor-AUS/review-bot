@@ -1,0 +1,8 @@
+{
+  "changeType": "created",
+  "notificationUrl": "https://review-bot-dev-func.azurewebsites.net/api/listener",
+  "resource": "/users/7842a177-7164-464e-9563-c1de1d3f985e/messages",
+  "expirationDateTime": "2025-11-17T00:00:00.000Z",
+  "clientState": "ReviewBotSecret123"
+}
+
