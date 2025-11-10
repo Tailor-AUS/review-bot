@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": {
+      "value": "dev"
+    },
+    "location": {
+      "value": "australiaeast"
+    },
+    "botAppId": {
+      "value": "3e18cba3-f774-4557-bba8-c6633656fb12"
+    },
+    "botAppSecret": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/5745cb5e-8c39-470f-ab6f-8a5897b7f9af/resourceGroups/rg-review-bot/providers/Microsoft.KeyVault/vaults/review-bot-kv"
+        },
+        "secretName": "bot-client-secret"
+      }
+    },
+    "reviewUserId": {
+      "value": "7842a177-7164-464e-9563-c1de1d3f985e"
+    },
+    "reviewUpn": {
+      "value": "review@NETORGFT18200403.onmicrosoft.com"
+    },
+    "tenantId": {
+      "value": "cc8f25ed-7019-48b7-ba94-2b54a35a42aa"
+    }
+  }
+}
+
