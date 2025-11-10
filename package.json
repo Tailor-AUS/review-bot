@@ -21,7 +21,6 @@
   "dependencies": {
     "@azure/functions": "^4.0.0",
     "@microsoft/microsoft-graph-client": "^3.0.7",
-    "@microsoft/microsoft-graph-client-authProviders-azureTokenCredentials": "^1.0.0",
     "@azure/identity": "^4.0.0",
     "@azure/communication-calling": "^1.14.0",
     "botbuilder": "^4.22.0",
