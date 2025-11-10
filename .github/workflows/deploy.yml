@@ -1,10 +1,18 @@
-name: Deploy Review Bot
+name: Auto-Deploy Code (Fast)
+
+# This workflow automatically deploys code changes on push
+# For full infrastructure + code deployment, use "Deploy Teams Agent (Full Stack)" workflow
 
 on:
   push:
     branches:
       - master
       - main
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'tsconfig.json'
+      - 'host.json'
   workflow_dispatch:
 
 env:
